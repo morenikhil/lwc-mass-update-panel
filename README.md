@@ -43,41 +43,8 @@ A **reusable Lightning Web Component** that lets users bulk-edit a single field 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Host Page / App                       │
-│  (e.g. accountMassUpdatePage)                           │
-│                                                         │
-│  @wire getRecords ──────────────────────────────────┐   │
-│                                                     ▼   │
-│  ┌────────────────────────────────────────────────────┐ │
-│  │               massUpdatePanel (LWC)                │ │
-│  │                                                    │ │
-│  │  ┌──────────────┐   ┌─────────────────────────┐   │ │
-│  │  │ lightning-   │   │  Field & Value Picker   │   │ │
-│  │  │ datatable    │   │  (dynamic input type)   │   │ │
-│  │  └──────────────┘   └─────────────────────────┘   │ │
-│  │                                                    │ │
-│  │  ┌──────────────────────────────────────────────┐  │ │
-│  │  │       massUpdateConfirmModal (LWC)           │  │ │
-│  │  │   Update mode  │  Rollback mode              │  │ │
-│  │  └──────────────────────────────────────────────┘  │ │
-│  │                                                    │ │
-│  │  ◂ onmassupdate  ◂ onrollback  (CustomEvents)     │ │
-│  └────────────────────────────────────────────────────┘ │
-│                          │                              │
-│                    Apex imperative                       │
-└──────────────────────────┼──────────────────────────────┘
-                           ▼
-           ┌───────────────────────────────┐
-           │     MassUpdateController      │
-           │                               │
-           │  getRecords()   (cacheable)   │
-           │  massUpdate()                 │
-           │  rollbackUpdate()             │
-           └───────────┬───────────────────┘
-                       │  Database.update(…, allOrNone=false)
-                       ▼
-                  Salesforce Database
+<img width="4300" height="3100" alt="Mass-Update-Panel-Architecture" src="https://github.com/user-attachments/assets/d4fd0233-c9fa-4118-b17d-9627a41031a0" />
+
 ```
 
 ### Data Flow — Update
