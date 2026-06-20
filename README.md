@@ -42,11 +42,9 @@ A **reusable Lightning Web Component** that lets users bulk-edit a single field 
 
 ## Architecture
 
-```
+<img width="4300" height="3100" alt="Mass-Update-Panel-Architecture" src="https://github.com/user-attachments/assets/0560c9b5-13f3-4228-81a6-6727cb32c6f6" />
 
-<img width="4300" height="3100" alt="Mass-Update-Panel-Architecture" src="https://github.com/user-attachments/assets/7c2d9135-dc20-4172-992a-e2f2921777bb" />
-
-```
+---
 
 ### Data Flow — Update
 
