@@ -41,8 +41,43 @@ A **reusable Lightning Web Component** that lets users bulk-edit a single field 
 ---
 
 ## Architecture
-<img width="4300" height="3100" alt="Mass-Update-Panel-Architecture" src="https://github.com/user-attachments/assets/2028137a-8919-4cc0-8160-60edd1f21590" />
 
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Host Page / App                       │
+│  (e.g. accountMassUpdatePage)                           │
+│                                                         │
+│  @wire getRecords ──────────────────────────────────┐   │
+│                                                     ▼   │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │               massUpdatePanel (LWC)                │ │
+│  │                                                    │ │
+│  │  ┌──────────────┐   ┌─────────────────────────┐   │ │
+│  │  │ lightning-   │   │  Field & Value Picker   │   │ │
+│  │  │ datatable    │   │  (dynamic input type)   │   │ │
+│  │  └──────────────┘   └─────────────────────────┘   │ │
+│  │                                                    │ │
+│  │  ┌──────────────────────────────────────────────┐  │ │
+│  │  │       massUpdateConfirmModal (LWC)           │  │ │
+│  │  │   Update mode  │  Rollback mode              │  │ │
+│  │  └──────────────────────────────────────────────┘  │ │
+│  │                                                    │ │
+│  │  ◂ onmassupdate  ◂ onrollback  (CustomEvents)     │ │
+│  └────────────────────────────────────────────────────┘ │
+│                          │                              │
+│                    Apex imperative                       │
+└──────────────────────────┼──────────────────────────────┘
+                           ▼
+           ┌───────────────────────────────┐
+           │     MassUpdateController      │
+           │                               │
+           │  getRecords()   (cacheable)   │
+           │  massUpdate()                 │
+           │  rollbackUpdate()             │
+           └───────────┬───────────────────┘
+                       │  Database.update(…, allOrNone=false)
+                       ▼
+                  Salesforce Database
 ```
 
 ### Data Flow — Update
