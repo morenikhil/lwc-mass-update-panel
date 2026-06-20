@@ -45,8 +45,6 @@ A **reusable Lightning Web Component** that lets users bulk-edit a single field 
 
 ```
 
-```
-
 ### Data Flow — Update
 
 ```
