@@ -1,0 +1,17 @@
+/* Confirm icon sizes and accent colours */
+.confirm-icon_update {
+    color: var(--lwc-colorTextActionActive, #0070d2);
+}
+
+.confirm-icon_rollback {
+    color: var(--lwc-colorTextError, #c23934);
+}
+
+/* Inline warning/info box inside modal body */
+.warning-box {
+    border-left: 4px solid #ffb75d;
+    border-radius: 0 4px 4px 0;
+    display: flex;
+    align-items: flex-start;
+    padding: 0.5rem 0.75rem;
+}

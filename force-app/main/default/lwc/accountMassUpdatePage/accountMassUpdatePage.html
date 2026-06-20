@@ -1,0 +1,23 @@
+<!--
+  Example host page: Account Mass Update
+  Shows how to wire getRecords + configure massUpdatePanel.
+-->
+<template>
+    <template lwc:if={isLoading}>
+        <lightning-spinner alternative-text="Loading accounts..."></lightning-spinner>
+    </template>
+
+    <template lwc:if={error}>
+        <lightning-formatted-text value={error}></lightning-formatted-text>
+    </template>
+
+    <c-mass-update-panel
+        sobject-api-name="Account"
+        records={accounts}
+        columns={columns}
+        editable-fields={editableFields}
+        max-row-selection="500"
+        onmassupdate={handleMassUpdate}
+        onrollback={handleRollback}>
+    </c-mass-update-panel>
+</template>

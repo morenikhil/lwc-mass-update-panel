@@ -1,0 +1,17 @@
+# SFDX
+.sfdx/
+.sf/
+*.zip
+
+# Node
+node_modules/
+.npmrc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,93 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        aria-labelledby="modal-heading"
+        class="slds-modal slds-fade-in-open">
+
+        <div class="slds-modal__container">
+
+            <!-- Header -->
+            <header class="slds-modal__header">
+                <lightning-icon
+                    icon-name={headerIcon}
+                    size="small"
+                    variant={headerIconVariant}
+                    class="slds-m-right_small">
+                </lightning-icon>
+                <h2 id="modal-heading" class="slds-modal__title slds-hyphenate">
+                    {headerTitle}
+                </h2>
+            </header>
+
+            <!-- Body -->
+            <div class="slds-modal__content slds-p-around_medium">
+
+                <template lwc:if={isUpdateMode}>
+                    <div class="slds-text-align_center slds-m-bottom_medium">
+                        <lightning-icon
+                            icon-name="utility:edit"
+                            size="large"
+                            class="confirm-icon confirm-icon_update">
+                        </lightning-icon>
+                    </div>
+                    <p class="slds-text-body_regular slds-text-align_center">
+                        You are about to update the field
+                        <strong> {fieldLabel} </strong>
+                        to
+                        <strong> "{newValue}" </strong>
+                        across
+                        <strong> {selectedCount} record(s)</strong>.
+                    </p>
+                    <div class="slds-box slds-theme_shade slds-m-top_medium warning-box">
+                        <lightning-icon icon-name="utility:warning" size="x-small" variant="warning" class="slds-m-right_x-small"></lightning-icon>
+                        <span class="slds-text-body_small">
+                            This action will overwrite existing values. A rollback option will be available immediately after.
+                        </span>
+                    </div>
+                </template>
+
+                <template lwc:if={isRollbackMode}>
+                    <div class="slds-text-align_center slds-m-bottom_medium">
+                        <lightning-icon
+                            icon-name="utility:undo"
+                            size="large"
+                            class="confirm-icon confirm-icon_rollback">
+                        </lightning-icon>
+                    </div>
+                    <p class="slds-text-body_regular slds-text-align_center">
+                        This will <strong>restore</strong> the previous values for
+                        <strong> {selectedCount} record(s)</strong>
+                        in the field <strong>{fieldLabel}</strong>.
+                    </p>
+                    <div class="slds-box slds-theme_shade slds-m-top_medium warning-box">
+                        <lightning-icon icon-name="utility:info" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                        <span class="slds-text-body_small">
+                            Only the immediately preceding update can be rolled back.
+                        </span>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Footer -->
+            <footer class="slds-modal__footer">
+                <lightning-button
+                    label="Cancel"
+                    variant="neutral"
+                    onclick={handleCancel}
+                    class="slds-m-right_small">
+                </lightning-button>
+                <lightning-button
+                    label={confirmLabel}
+                    variant={confirmVariant}
+                    icon-name={confirmIcon}
+                    onclick={handleConfirm}>
+                </lightning-button>
+            </footer>
+        </div>
+    </section>
+
+    <!-- Backdrop -->
+    <div class="slds-backdrop slds-backdrop_open" onclick={handleCancel}></div>
+</template>

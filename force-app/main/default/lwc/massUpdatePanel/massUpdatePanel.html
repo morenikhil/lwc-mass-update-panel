@@ -1,0 +1,301 @@
+<template>
+    <lightning-card title="Mass Update Panel" icon-name="utility:multi_select_checkbox">
+
+        <!-- Global spinner overlay -->
+        <template lwc:if={isLoading}>
+            <lightning-spinner
+                alternative-text="Processing..."
+                size="medium"
+                class="spinner-overlay">
+            </lightning-spinner>
+        </template>
+
+        <div class="slds-p-around_medium">
+
+            <!-- ── Toast / Alert bar ─────────────────────────────────────── -->
+            <template lwc:if={alertMessage}>
+                <div class={alertClass} role="alert">
+                    <span class="slds-assistive-text">info</span>
+                    <lightning-icon
+                        icon-name={alertIcon}
+                        size="x-small"
+                        class="slds-m-right_x-small">
+                    </lightning-icon>
+                    <span class="slds-text-body_small">{alertMessage}</span>
+                    <button
+                        class="slds-button slds-button_icon slds-button_icon-small slds-float_right"
+                        title="Close"
+                        onclick={clearAlert}>
+                        <lightning-icon icon-name="utility:close" size="x-small"></lightning-icon>
+                    </button>
+                </div>
+            </template>
+
+            <!-- ── Step indicator ────────────────────────────────────────── -->
+            <div class="slds-grid slds-gutters slds-m-bottom_medium step-bar">
+                <div class={stepClass1}>
+                    <span class="step-badge">1</span>
+                    <span class="slds-text-body_small slds-m-left_xx-small">Select Records</span>
+                </div>
+                <div class="step-divider"></div>
+                <div class={stepClass2}>
+                    <span class="step-badge">2</span>
+                    <span class="slds-text-body_small slds-m-left_xx-small">Choose Field &amp; Value</span>
+                </div>
+                <div class="step-divider"></div>
+                <div class={stepClass3}>
+                    <span class="step-badge">3</span>
+                    <span class="slds-text-body_small slds-m-left_xx-small">Confirm &amp; Apply</span>
+                </div>
+            </div>
+
+            <!-- ── Step 1 : Record table ──────────────────────────────────── -->
+            <section class="slds-box slds-m-bottom_medium">
+                <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                    <h2 class="slds-text-heading_small">Records
+                        <template lwc:if={hasSelection}>
+                            <lightning-badge
+                                label={selectionLabel}
+                                class="slds-m-left_x-small badge-selected">
+                            </lightning-badge>
+                        </template>
+                    </h2>
+                    <lightning-button-group>
+                        <lightning-button
+                            label="Select All"
+                            icon-name="utility:check"
+                            onclick={handleSelectAll}
+                            disabled={isLoading}>
+                        </lightning-button>
+                        <lightning-button
+                            label="Clear Selection"
+                            icon-name="utility:close"
+                            onclick={handleClearSelection}
+                            disabled={noSelection}>
+                        </lightning-button>
+                    </lightning-button-group>
+                </div>
+
+                <lightning-datatable
+                    key-field="Id"
+                    data={records}
+                    columns={columns}
+                    selected-rows={selectedRowIds}
+                    onrowselection={handleRowSelection}
+                    max-row-selection={maxRowSelection}
+                    hide-checkbox-column="false"
+                    resize-column-disabled="false"
+                    class="datatable">
+                </lightning-datatable>
+
+                <template lwc:if={noRecords}>
+                    <div class="slds-illustration slds-illustration_small slds-m-top_medium">
+                        <lightning-icon icon-name="utility:info" size="small"></lightning-icon>
+                        <span class="slds-m-left_x-small slds-text-color_weak">No records available.</span>
+                    </div>
+                </template>
+            </section>
+
+            <!-- ── Step 2 : Field & value picker ─────────────────────────── -->
+            <template lwc:if={hasSelection}>
+                <section class="slds-box slds-m-bottom_medium">
+                    <h2 class="slds-text-heading_small slds-m-bottom_small">Field &amp; New Value</h2>
+
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        <!-- Field selector -->
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-combobox
+                                label="Field to Update"
+                                placeholder="— select a field —"
+                                value={selectedFieldApiName}
+                                options={fieldOptions}
+                                onchange={handleFieldChange}
+                                required
+                                disabled={isLoading}>
+                            </lightning-combobox>
+                        </div>
+
+                        <!-- Dynamic value input -->
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <template lwc:if={showTextInput}>
+                                <lightning-input
+                                    label="New Value"
+                                    value={newValue}
+                                    onchange={handleValueChange}
+                                    disabled={isLoading}>
+                                </lightning-input>
+                            </template>
+
+                            <template lwc:if={showPicklistInput}>
+                                <lightning-combobox
+                                    label="New Value"
+                                    placeholder="— select a value —"
+                                    value={newValue}
+                                    options={currentPicklistOptions}
+                                    onchange={handleValueChange}
+                                    disabled={isLoading}>
+                                </lightning-combobox>
+                            </template>
+
+                            <template lwc:if={showNumberInput}>
+                                <lightning-input
+                                    type="number"
+                                    label="New Value"
+                                    value={newValue}
+                                    onchange={handleValueChange}
+                                    disabled={isLoading}>
+                                </lightning-input>
+                            </template>
+
+                            <template lwc:if={showDateInput}>
+                                <lightning-input
+                                    type="date"
+                                    label="New Value"
+                                    value={newValue}
+                                    onchange={handleValueChange}
+                                    disabled={isLoading}>
+                                </lightning-input>
+                            </template>
+
+                            <template lwc:if={showDatetimeInput}>
+                                <lightning-input
+                                    type="datetime"
+                                    label="New Value"
+                                    value={newValue}
+                                    onchange={handleValueChange}
+                                    disabled={isLoading}>
+                                </lightning-input>
+                            </template>
+
+                            <template lwc:if={showCheckboxInput}>
+                                <lightning-input
+                                    type="checkbox"
+                                    label="New Value"
+                                    checked={newValueBoolean}
+                                    onchange={handleCheckboxChange}
+                                    disabled={isLoading}>
+                                </lightning-input>
+                            </template>
+
+                            <template lwc:if={showEmailInput}>
+                                <lightning-input
+                                    type="email"
+                                    label="New Value"
+                                    value={newValue}
+                                    onchange={handleValueChange}
+                                    disabled={isLoading}>
+                                </lightning-input>
+                            </template>
+
+                            <template lwc:if={showUrlInput}>
+                                <lightning-input
+                                    type="url"
+                                    label="New Value"
+                                    value={newValue}
+                                    onchange={handleValueChange}
+                                    disabled={isLoading}>
+                                </lightning-input>
+                            </template>
+
+                            <template lwc:if={showPhoneInput}>
+                                <lightning-input
+                                    type="tel"
+                                    label="New Value"
+                                    value={newValue}
+                                    onchange={handleValueChange}
+                                    disabled={isLoading}>
+                                </lightning-input>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Preview bar -->
+                    <template lwc:if={showPreviewBar}>
+                        <div class="slds-box slds-theme_shade slds-m-top_medium preview-bar">
+                            <lightning-icon icon-name="utility:preview" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                            <span class="slds-text-body_small">
+                                Will update <strong>{selectedCount}</strong> record(s) —
+                                <em>{selectedFieldLabel}</em> → <strong>"{displayNewValue}"</strong>
+                            </span>
+                        </div>
+                    </template>
+
+                    <!-- Action buttons -->
+                    <div class="slds-m-top_medium slds-grid slds-gutters slds-grid_align-end">
+                        <div class="slds-col slds-shrink">
+                            <lightning-button
+                                label="Apply Update"
+                                variant="brand"
+                                icon-name="utility:apex"
+                                onclick={handleOpenConfirm}
+                                disabled={isApplyDisabled}>
+                            </lightning-button>
+                        </div>
+                        <template lwc:if={canRollback}>
+                            <div class="slds-col slds-shrink">
+                                <lightning-button
+                                    label="Rollback Last Update"
+                                    variant="destructive-text"
+                                    icon-name="utility:undo"
+                                    onclick={handleRollbackConfirm}
+                                    disabled={isLoading}>
+                                </lightning-button>
+                            </div>
+                        </template>
+                    </div>
+                </section>
+            </template>
+
+            <!-- ── Step 3 : Results summary ───────────────────────────────── -->
+            <template lwc:if={showResultSummary}>
+                <section class="slds-box slds-theme_shade">
+                    <h2 class="slds-text-heading_small slds-m-bottom_small">
+                        <lightning-icon icon-name="utility:success" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                        Last Operation Summary
+                    </h2>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_1-of-3 summary-tile summary-tile_success">
+                            <p class="slds-text-heading_large">{lastResult.successCount}</p>
+                            <p class="slds-text-body_small">Succeeded</p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-3 summary-tile summary-tile_error">
+                            <p class="slds-text-heading_large">{lastResult.failureCount}</p>
+                            <p class="slds-text-body_small">Failed</p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-3 summary-tile">
+                            <p class="slds-text-heading_large">{lastResult.total}</p>
+                            <p class="slds-text-body_small">Total</p>
+                        </div>
+                    </div>
+
+                    <!-- Failed records detail -->
+                    <template lwc:if={hasFailures}>
+                        <div class="slds-m-top_medium">
+                            <p class="slds-text-title slds-m-bottom_x-small">Failed Records</p>
+                            <template for:each={lastResult.failures} for:item="failure">
+                                <div key={failure.recordId} class="slds-grid failure-row">
+                                    <lightning-icon icon-name="utility:error" size="xx-small" variant="error" class="slds-m-right_x-small"></lightning-icon>
+                                    <span class="slds-text-body_small">
+                                        {failure.recordId} — {failure.errorMessage}
+                                    </span>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </section>
+            </template>
+        </div>
+    </lightning-card>
+
+    <!-- ── Confirmation modal ─────────────────────────────────────────────── -->
+    <template lwc:if={showConfirmModal}>
+        <c-mass-update-confirm-modal
+            selected-count={selectedCount}
+            field-label={selectedFieldLabel}
+            new-value={displayNewValue}
+            mode={confirmMode}
+            onconfirm={handleConfirm}
+            oncancel={handleCancelConfirm}>
+        </c-mass-update-confirm-modal>
+    </template>
+</template>

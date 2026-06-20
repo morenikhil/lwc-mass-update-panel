@@ -1,0 +1,112 @@
+/* ── Spinner overlay ──────────────────────────────────────────────────────── */
+.spinner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Step indicator bar ───────────────────────────────────────────────────── */
+.step-bar {
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    color: var(--lwc-colorTextWeakest, #c9c9c9);
+    font-weight: 400;
+    transition: color 0.2s;
+}
+
+.step-item_active {
+    color: var(--lwc-colorTextActionActive, #0070d2);
+    font-weight: 600;
+}
+
+.step-item_done {
+    color: var(--lwc-colorTextSuccess, #2e7d32);
+    font-weight: 500;
+}
+
+.step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: currentColor;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* Badge text colour inherits inverse of parent text */
+.step-item      .step-badge { background: #c9c9c9; color: #fff; }
+.step-item_active .step-badge { background: #0070d2; color: #fff; }
+.step-item_done   .step-badge { background: #2e7d32; color: #fff; }
+
+.step-divider {
+    flex: 1;
+    height: 2px;
+    background: #dddbda;
+    margin: 0 0.5rem;
+}
+
+/* ── Alert / notification bar ─────────────────────────────────────────────── */
+.alert-bar {
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+/* ── Selection badge ─────────────────────────────────────────────────────── */
+.badge-selected {
+    --sds-c-badge-color-background: #0070d2;
+    --sds-c-badge-text-color: #fff;
+}
+
+/* ── Preview bar ─────────────────────────────────────────────────────────── */
+.preview-bar {
+    border-left: 4px solid #0070d2;
+    background: #f3f3f3;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0 4px 4px 0;
+    display: flex;
+    align-items: center;
+}
+
+/* ── Result summary tiles ────────────────────────────────────────────────── */
+.summary-tile {
+    text-align: center;
+    padding: 0.75rem;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.summary-tile_success { border-top: 4px solid #2e7d32; }
+.summary-tile_error   { border-top: 4px solid #c23934; }
+
+/* ── Failure rows ─────────────────────────────────────────────────────────── */
+.failure-row {
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #f3f3f3;
+    align-items: center;
+}
+
+/* ── Datatable min-height ─────────────────────────────────────────────────── */
+.datatable {
+    min-height: 3rem;
+}
