@@ -365,13 +365,4 @@ sf apex run test \
 
 ---
 
-## Contributing
-
-1. Fork the repository and create a feature branch.
-2. Follow [Salesforce LWC best practices](https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.get_started_introduction).
-3. Add or update Apex tests — maintain ≥ 85 % code coverage.
-4. Submit a pull request with a clear description of the change.
-
----
-
-*Built with Salesforce LWC · API v61.0 · SLDS 2.x*
+>*Built with Salesforce LWC · API v61.0 · SLDS 2.x*
